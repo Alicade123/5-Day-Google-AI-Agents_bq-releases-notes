@@ -1,14 +1,51 @@
 :root {
   --bg: #f6f8fb;
+  --bg-gradient-top: #eef4ff;
   --surface: #ffffff;
+  --card-bg: #fbfdff;
+  --muted-surface: #f8fafc;
   --border: #d9e2ec;
   --text: #1f2933;
   --muted: #627d98;
   --accent: #1a73e8;
   --accent-dark: #1558b0;
+  --accent-hover-border: #9ec5ff;
   --badge-bg: #e8f0fe;
   --selected: #e3f2fd;
+  --selected-ring: rgba(26, 115, 232, 0.12);
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --spinner-track: #c5d4e8;
+  --btn-primary-bg: #111827;
+  --btn-primary-hover: #000000;
+  --error-bg: #fff1f2;
+  --error-border: #fecdd3;
+  --error-text: #9f1239;
+  --success-text: #0f766e;
+}
+
+[data-theme="dark"] {
+  --bg: #0f1419;
+  --bg-gradient-top: #1a2332;
+  --surface: #1e2732;
+  --card-bg: #243040;
+  --muted-surface: #1a2330;
+  --border: #3d4f63;
+  --text: #e8eef4;
+  --muted: #9fb0c0;
+  --accent: #8ab4f8;
+  --accent-dark: #aecbfa;
+  --accent-hover-border: #5f8fd6;
+  --badge-bg: #2a3f5f;
+  --selected: #2a3d55;
+  --selected-ring: rgba(138, 180, 248, 0.2);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --spinner-track: #3d4f63;
+  --btn-primary-bg: #e8eef4;
+  --btn-primary-hover: #ffffff;
+  --error-bg: #3b1f24;
+  --error-border: #7f1d2d;
+  --error-text: #fecdd3;
+  --success-text: #5eead4;
 }
 
 * {
@@ -19,8 +56,9 @@ body {
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 220px);
+  background: linear-gradient(180deg, var(--bg-gradient-top) 0%, var(--bg) 220px);
   min-height: 100vh;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .header {
@@ -34,6 +72,13 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
@@ -62,6 +107,7 @@ h1 {
   font-size: 0.95rem;
 }
 
+.action-btn,
 .refresh-btn {
   display: inline-flex;
   align-items: center;
@@ -75,17 +121,24 @@ h1 {
   font-weight: 600;
   cursor: pointer;
   box-shadow: var(--shadow);
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
+.action-btn:hover:not(:disabled),
 .refresh-btn:hover:not(:disabled) {
   transform: translateY(-1px);
   border-color: var(--accent);
 }
 
+.action-btn:disabled,
 .refresh-btn:disabled {
   opacity: 0.75;
   cursor: wait;
+}
+
+.action-btn:disabled:not(.loading) {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .refresh-btn.loading .spinner {
@@ -96,11 +149,62 @@ h1 {
   opacity: 0.7;
 }
 
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.theme-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-toggle-track {
+  position: relative;
+  width: 2.6rem;
+  height: 1.45rem;
+  background: var(--border);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  background: var(--surface);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle input:checked + .theme-toggle-track {
+  background: var(--accent);
+}
+
+.theme-toggle input:checked + .theme-toggle-track .theme-toggle-thumb {
+  transform: translateX(1.15rem);
+}
+
+.theme-toggle-label {
+  color: var(--muted);
+}
+
 .spinner {
   display: none;
   width: 1rem;
   height: 1rem;
-  border: 2px solid #c5d4e8;
+  border: 2px solid var(--spinner-track);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -128,6 +232,7 @@ h1 {
   border-radius: 18px;
   padding: 1.25rem;
   box-shadow: var(--shadow);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .panel-title {
@@ -172,7 +277,7 @@ h1 {
   width: 100%;
   text-align: left;
   border: 1px solid var(--border);
-  background: #fbfdff;
+  background: var(--card-bg);
   border-radius: 14px;
   padding: 0.9rem 1rem;
   margin-bottom: 0.75rem;
@@ -181,13 +286,44 @@ h1 {
 }
 
 .update-card:hover {
-  border-color: #9ec5ff;
+  border-color: var(--accent-hover-border);
 }
 
 .update-card.selected {
   border-color: var(--accent);
   background: var(--selected);
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+  box-shadow: 0 0 0 3px var(--selected-ring);
+}
+
+.update-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.copy-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.copy-btn.copied {
+  color: var(--success-text);
+  border-color: var(--success-text);
 }
 
 .category-badge {
@@ -200,7 +336,6 @@ h1 {
   letter-spacing: 0.04em;
   border-radius: 999px;
   padding: 0.2rem 0.55rem;
-  margin-bottom: 0.5rem;
 }
 
 .update-content {
@@ -223,7 +358,7 @@ h1 {
 
 .selection-placeholder {
   color: var(--muted);
-  background: #f8fafc;
+  background: var(--muted-surface);
   border: 1px dashed var(--border);
   border-radius: 12px;
   padding: 1rem;
@@ -244,7 +379,7 @@ h1 {
 .selected-preview {
   margin: 0.75rem 0 1rem;
   padding: 0.9rem;
-  background: #f8fafc;
+  background: var(--muted-surface);
   border-radius: 12px;
   border: 1px solid var(--border);
   line-height: 1.5;
@@ -266,6 +401,8 @@ h1 {
   padding: 0.75rem;
   font: inherit;
   line-height: 1.45;
+  background: var(--surface);
+  color: var(--text);
 }
 
 .char-count {
@@ -282,23 +419,27 @@ h1 {
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 12px;
-  background: #111827;
-  color: #fff;
+  background: var(--btn-primary-bg);
+  color: var(--bg);
   text-decoration: none;
   font-weight: 600;
 }
 
+[data-theme="dark"] .tweet-btn {
+  color: #111827;
+}
+
 .tweet-btn:hover {
-  background: #000;
+  background: var(--btn-primary-hover);
 }
 
 .error-banner {
   margin-bottom: 1rem;
   padding: 0.85rem 1rem;
   border-radius: 12px;
-  background: #fff1f2;
-  border: 1px solid #fecdd3;
-  color: #9f1239;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
 }
 
 @media (max-width: 900px) {
@@ -308,5 +449,9 @@ h1 {
 
   .tweet-panel {
     position: static;
+  }
+
+  .header-actions {
+    width: 100%;
   }
 }
