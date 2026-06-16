@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BigQuery Release Notes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <p class="eyebrow">Google Cloud</p>
+        <h1>BigQuery Release Notes</h1>
+        <p class="subtitle">Latest updates from the official BigQuery feed</p>
+      </div>
+      <button id="refresh-btn" class="refresh-btn" type="button">
+        <span class="btn-label">Refresh</span>
+        <span class="spinner" aria-hidden="true"></span>
+      </button>
+    </div>
+    <p id="status" class="status" role="status"></p>
+  </header>
+
+  <main class="layout">
+    <section class="notes-panel">
+      <h2 class="panel-title">Release notes</h2>
+      <div id="notes-list" class="notes-list"></div>
+      <p id="empty-state" class="empty-state hidden">No release notes found.</p>
+    </section>
+
+    <aside class="tweet-panel">
+      <h2 class="panel-title">Share an update</h2>
+      <div id="selection-placeholder" class="selection-placeholder">
+        Select an update from the list to compose a tweet.
+      </div>
+      <div id="selection-detail" class="selection-detail hidden">
+        <p class="selected-date" id="selected-date"></p>
+        <span class="category-badge" id="selected-category"></span>
+        <div class="selected-preview" id="selected-preview"></div>
+        <label class="tweet-label" for="tweet-text">Tweet preview</label>
+        <textarea id="tweet-text" rows="6" maxlength="280"></textarea>
+        <p class="char-count"><span id="char-count">0</span> / 280</p>
+        <a id="tweet-btn" class="tweet-btn" href="#" target="_blank" rel="noopener noreferrer">
+          Post on X
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
